@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Monero privacy leaks</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <style>
+            * {
+                box-sizing: border-box;
+                font-size: 1.15rem;
+                font-family: Arial, sans-serif;
+            }
+            html {
+                max-width: 800px;
+                padding: 3rem 1rem;
+                margin: auto;
+                line-height: 1.25;
+                padding: 0;
+            }
+            body {
+                margin: 3rem 1rem;
+                word-wrap: break-word;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            input {
+                line-height: 1.25;
+                width: 100%;
+                height: 1.8rem;
+                font-size: 1.15rem;
+                border: 1px solid grey;
+            }
+            .hidden {
+                display: none !important;
+            }
+            @media screen and (max-width: 600px) {
+            }
+        </style>
+        <script>
+            var $ = document.querySelector.bind( document );
+            var $$ = document.querySelectorAll.bind( document );
+            var url_params = new URLSearchParams( window.location.search );
+            var url_keys = url_params.keys();
+            var $_GET = {}
+            for ( var key of url_keys ) $_GET[ key ] = url_params.get( key );
+        </script>
+    </head>
+    <body>
+        <h1>Monero privacy leaks</h1>
+        <p>Examples of privacy leaks used to trace monero</p>
+        <hr>
+        <h2>1. The admin of Incognito Market</h2>
+        <p>
+            The Justice Department says they found the admin of Incognito Market by tracing his monero using timing analysis. <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - January 2024
+        </p>
+        <p>
+            Key quote: “cryptocurrency was first swapped through Swapping Service-1 and converted...to Monero... After the swap, the funds were transferred into [the perp’s] Crypto Account...[at the KYC exchange]..." <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - page 25
+        </p>
+        <hr>
+        <h2>2. A Columbian drug dealer</h2>
+        <p>
+            Chainalysis says they found a Columbian drug seller by tracing his monero using poisoned outputs. <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - September 2024
+        </p>
+        <p>
+            Key quote: "And so that was a really exciting moment for us because we were able to start using just this list of Morphtoken swaps occurring on the monero blockchain-–-very little information, and not many breadcrumbs to follow. We were able to trace that forward on the monero blockchain to an rpc ip observation and then leverage other chainalysis tools in order to find more potential results that we can return to law enforcement." <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - 38:37
+        </p>
+        <hr>
+        <h2>3. A Finnish ransomware operator</h2>
+        <p>
+            Finnish authorities say they traced a ransomware operator’s monero from a swap service to a monero wallet to binance. The description of the case makes it sound like they used poisoned outputs, but there is evidence that the perpetrator leaked his monero private keys shortly before his arrest, which would have enabled a simpler attack: simply look up his transaction history on the blockchain. <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - January 2024
+        </p>
+        <p>
+            Key quote: "[He began] swapping for Monero and then transferring the funds to a dedicated Monero wallet. [Then] the funds were later sent to Binance." <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - more details <a href="https://www.reddit.com/r/Monero/comments/19emsfe/finlands_national_bureau_of_investigation_claims/" target="_blank">here</a>
+        </p>
+        <hr>
+        <h2>4. 18 Japanese perpetrators of computer fraud</h2>
+        <p>
+            Japanese authorities say they analyzed monero wallets found on the computers of 18 criminals who they arrested on other grounds. They then used the data they found in those wallets to charge them with money laundering. <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - October 2024
+        </p>
+        <p>
+            Key quote: "Japanese authorities said they analyzed about 900 of the group’s Monero-based money-laundering transactions...[and] told local media outlet Nikkei that this marked the first time the country’s law enforcement agencies had used Monero transactions to identify criminals." <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - more details <a href="https://web.archive.org/web/20241022125846/https://www.nikkei.com/article/DGXZQOUE211MN0R21C24A0000000/" target="_blank">here</a>
+        </p>
+        <hr>
+        <h2>5. The operators of Archetyp</h2>
+        <p>
+            Interpol shut down monero-only darknet market Archetyp and says they found its operators by "tracing [their] financial flows". It is not *certain* that this means they traced their monero, but it was a monero-only exchange, so monero is the only type of finances I know they had available to trace. <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a> - June 2025
+        </p>
+        <p>
+            Key quote: "The takedown follows years of intensive investigative work to map the platform’s technical architecture and identify the individuals behind it. By tracing financial flows, analysing digital forensic evidence, and working closely with partners on the ground, authorities were able to deliver a decisive blow to one of the most prolific drug markets on the dark web." <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a>
+        </p>
+        <hr>
+        <h2>6. The Bitfinex hacker</h2>
+        <p>
+            Chainalysis reports that the Bitfinex hacker was found by identifying gift cards that he purchased using bitcoin, not monero. After his arrest, the police found monero wallets on his computer with their private keys, and they then used the private keys to simply look up his XMR transaction history on the blockchain. <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a> - July 2023
+        </p>
+        <p>
+            Key quote: "agents [got] a search warrant for Lichtenstein and Morgan’s home and cloud storage accounts, where they found files containing details of the cryptocurrency addresses used to move the stolen funds---including their private keys---along with the false information used to open accounts at cryptocurrency exchanges and plans to acquire fake passports. That discovery enabled investigators to trace the flow of funds in its entirety." <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a>
+        </p>
+        <hr>
+        <h2>7. The Ciphertrace tool</h2>
+        <p>
+            Mastercard offers a monero tracing tool created by Ciphertrace. It is part of their Crypto Source product. <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source 1</a>, <a href="https://www.mastercard.com/news/press/2022/october/mastercard-to-bring-crypto-trading-capabilities-to-banks/" target="_blank">source 2</a> - August 2021
+        </p>
+        <p>
+            Key quote: "Ciphertrace takes Monero tracing capabilities to the next level with the ability to follow the flow of funds backwards from the transaction of interest to its source." <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source</a> - see also <a href="https://www.youtube.com/watch?v=w5rtd3md11g" target="_blank">this video interview</a> with a Ciphertrace employee about their monero tracing tool
+        </p>
+    </body>
+</html> 
