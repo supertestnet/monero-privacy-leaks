@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script>
-            if ( window.location.protocol !== "https:" && window.location.protocol !== "file"  ) {
-                var url = "https://" + window.location.hostname + window.location.pathname;
-                window.location.href = url;
-            }
-        </script>
         <meta charset="UTF-8">
-        <title>Monero leaks</title>
+        <title>Monero privacy leaks</title>
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <style>
             * {
@@ -64,145 +58,193 @@
         </script>
     </head>
     <body>
-        <h1>Monero leaks</h1>
+        <h1>Monero privacy leaks</h1>
         <p>Examples of privacy leaks used to trace monero</p>
         <hr>
-        <h2>1. The admin of Incognito Market</h2>
-        <p>
-            The Justice Department says they found the admin of Incognito Market by tracing his monero. <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - January 2024
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "cryptocurrency was first swapped through Swapping Service-1 and converted...to Monero... After the swap, the funds were transferred into [the perp’s] Crypto Account...[at the KYC exchange]..." <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - page 25
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with timing analysis</p>
-            <p><span class="bold">Data leaked by the target</span>:</p>
+        <p style="text-align: center;"><button class="menu_btns list_of_leaks_btn">List of leaks</button> <button class="menu_btns case_studies_btn">Case studies</button></p>
+        <hr>
+        <div class="list_of_leaks hidden">
+            <h1>List of leaks</h1>
+            <hr>
+            <h2>Leaks involving receiver privacy</h2>
             <ul>
-                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
-                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>Monero only works if the receiver provides the sender with a monero address -- thus leaking it to the sender</li>
+                <li>Every monero transaction leaks one of the receiver's stealth public keys to the sender</li>
+                <li>Every monero transaction provides cryptographic proof to the sender linking the recipient's stealth public key to their original monero address</li>
+                <li>Every monero transaction leaks the amount received by the recipient to the sender</li>
             </ul>
-            <p><span class="bold">Data used by the attacker</span>: The attacker's report used the amounts received by the target, the time of the target's "send" transactions, and the amounts sent in each of those transactions. It did not use the info about the target's stealth public keys, their ring signatures, or their fee data. The report argued that the time and amounts in the analyzed transactions demonstrated that the target did the following procedure several times: the target swapped criminal proceeds into monero via a no-KYC exchange, withdrew them to a monero wallet, and then, within minutes, sent similar amounts -- sometimes identical amounts -- to a KYC exchange, where they sold the monero for fiat currency. The KYC exchange had the target's KYC info, which is how the authorities nabbed him.</p>
-        </div>
-        <hr>
-        <h2>2. A Columbian drug dealer</h2>
-        <p>
-            Chainalysis says they found a Columbian drug seller by tracing his monero. <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - September 2024
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "And so that was a really exciting moment for us because we were able to start using just this list of Morphtoken swaps occurring on the monero blockchain-–-very little information, and not many breadcrumbs to follow. We were able to trace that forward on the monero blockchain to an rpc ip observation and then leverage other chainalysis tools in order to find more potential results that we can return to law enforcement." <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - 38:37
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with poisoned outputs and RPC connections</p>
-            <p><span class="bold">Data leaked by the target</span>:</p>
+            <hr>
+            <h2>Leaks involving sender privacy</h2>
             <ul>
-                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
-                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, the target's wallet leaked that it was a "light" wallet by using RPC connections to various monero nodes to broadcast its transactions</li>
-                <li>In one transaction, the target's wallet leaked the user's ip address while connecting to a monero node via an RPC connection</li>
+                <li>Every monero transaction leaks at least one of the sender's inputs -- these can sometimes be linked to the sender's real identity via the common input ownership heuristic</li>
+                <li>Every monero transaction leaks at least one of the sender's ring signatures, and each of those references 16 stealth public keys. 15 are "decoys" and one is the real stealth public key where the sender received the money he or she is now sending, and chain analysts have tools for eliminating decoys by e.g. checking if any of them belongs to themselves or one of their partners, which they can then rule out as definitely not the true spender (because they know they themselves didn't sign the transaction, and can ask their partners if they did). By ruling out many decoys as definitely not the true spender, they can sometimes even narrow it down to just one pubkey and thus know for sure which stealth public key in the ring signature is the true spender</li>
             </ul>
-            <p><span class="bold">Data used by the attacker</span>: The attacker's report used all of the above-listed leaks except for the fee data. (Although they did not use the fee data, they mentioned that it is sometimes useful for fingerprinting wallets, e.g. they mentioned that widely-used services like exchanges, darknet markets, and custodial wallets tend to set larger fees than do users of self-custodial wallets.) The target's use of a RPC connections was particularly meaningful because the target eventually revealed their ip address when their wallet connected to one of the attacker's nodes to broadcast a transaction, and the attacker was then able to use that ip address to find the target's real identity. To ensure that this transaction was created by the target, however, they had to do the following analysis: in several transactions, the attacker successfully used off-chain data about the "decoy" public keys in the ring signatures to eliminate some decoys, and at least once they identified the target as the true spend. They used these transaction analysis techniques several times, looking for transactions where the target connected to one of the attacker's nodes to broadcast a transaction via an RPC connection. The attacker found several transactions that did this, most of which could not be used to identify the recipient because he used a VPN to guard his ip address. But in one of them, he did not use a vpn, so they found his ip address and nabbed him. The only thing the attackers used timing analysis for, in this case, was to identify which transactions were sent before and after the Dandelion upgrade in monero, which makes it harder to identify the ip addresses of monero senders who use their own nodes.</p>
-        </div>
-        <hr>
-        <h2>3. A Finnish ransomware operator</h2>
-        <p>
-            Finnish authorities say they traced a ransomware operator’s monero from a swap service to a monero wallet to binance. The description of the case makes it sound like they used poisoned outputs, but there is evidence that the perpetrator leaked his monero private keys shortly before his arrest, which would have enabled a simpler attack: simply look up his transaction history on the blockchain. <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - January 2024
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "[He began] swapping for Monero and then transferring the funds to a dedicated Monero wallet. [Then] the funds were later sent to Binance." <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - more details <a href="https://www.reddit.com/r/Monero/comments/19emsfe/finlands_national_bureau_of_investigation_claims/" target="_blank">here</a>
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: either an Eve-Alice-Eve attack with poisoned outputs or a tx history lookup</p>
-            <p><span class="bold">Data leaked by the target</span>:</p>
+            <h2>Leaks involving amount privacy</h2>
             <ul>
-                <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
-                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
-                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
-                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                <li>Every monero transaction leaks the fee paid by the sender -- these fees are sometimes used for wallet fingerprinting, e.g. commonly used services like exchanges, darknet markets, and custodial wallets tend to set higher fees than do users of self-custodial wallets</li>
             </ul>
-            <p><span class="bold">Data used by the attacker</span>: It depends on which attack the attacker used, which is not clear from the report. Since the target leaked their private keys, the easiest attack would be to look up their transaction history. However, their description of the attack sounds like a case of poisoned outputs. If that is what it was, then the attacker likely used the same data in the Incognito Market report but without the timing info, which they probably substituted with stealth address data as in the Chainalysis report.</p>
-        </div>
-        <hr>
-        <h2>4. 18 Japanese perpetrators of computer fraud</h2>
-        <p>
-            Japanese authorities say they analyzed monero wallets found on the computers of 18 criminals who they arrested on other grounds. They then used the data they found in those wallets to charge them with money laundering. <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - October 2024
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "Japanese authorities said they analyzed about 900 of the group’s Monero-based money-laundering transactions...[and] told local media outlet Nikkei that this marked the first time the country’s law enforcement agencies had used Monero transactions to identify criminals." <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - more details <a href="https://web.archive.org/web/20241022125846/https://www.nikkei.com/article/DGXZQOUE211MN0R21C24A0000000/" target="_blank">here</a>
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: tx history lookup</p>
-            <p><span class="bold">Data leaked by the target</span>:</p>
+            <hr>
+            <h2>Common UX hurdles in monero</h2>
+            <p>These hurdles make it harder to use monero privately</p>
             <ul>
-                <li>The targets leaked their private keys and with them their tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+                <li>Many monero wallets share the user's "view key" with a server so that it can scan the blockchain in the background for any stealth public keys belonging to the user and tell them how much money they contain, which speeds up wallet functions at the expense of user privacy</li>
+                <li>Many monero wallets connect to monero nodes via an RPC connection in order to broadcast transactions, thus leaking their user's ip address to whatever nodes they connect to. These RPC connections bypass the Dandelion upgrade that is supposed to protect the sender's ip address</li>
+                <li>Many monero users reuse their monero address by e.g. providing it to multiple no-KYC exchanges. But address reuse is bad for privacy because it allows multiple senders to easily "compare notes" and see if they sent money to the same person</li>
+                <li>It is difficult to safely "rotate keys" in monero -- and delete your old private keys -- because monero wallets commonly support a "contact list" which works by directly storing the recipient's monero address for future reuse. So if you do delete your private keys, someone might send money to a monero address whose key you deleted. But rotating keys is wise because, in monero, your private keys are cryptographically linked to their whole transaction history, which can be looked up on the blockchain by anyone who acquires those keys. Rotating keys (and safely deleting the old ones) is thus wise but hard to do in monero, and that's a serious UX hurdle</li>
             </ul>
-            <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up their transaction history and then used the resulting information to charge them with money laundering.</p>
         </div>
-        <hr>
-        <h2>5. The operators of Archetyp</h2>
-        <p>
-            Interpol shut down monero-only darknet market Archetyp and says they found its operators by "tracing [their] financial flows". It is not *certain* that this means they traced their monero, but it was a monero-only exchange, so monero is the only type of finances I know they had available to trace. <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a> - June 2025
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "The takedown follows years of intensive investigative work to map the platform’s technical architecture and identify the individuals behind it. By tracing financial flows, analysing digital forensic evidence, and working closely with partners on the ground, authorities were able to deliver a decisive blow to one of the most prolific drug markets on the dark web." <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a>
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: insufficient data -- the reports only say the attacker traced the target's financial flows without specifying how they did so</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: insufficient data for the above-mentioned reasons</p>
-        </div>
-        <hr>
-        <h2>6. The Bitfinex hacker</h2>
-        <p>
-            Chainalysis reports that after the Bitfinex hacker was arrested, the police found monero wallets on his computer with their private keys, and they then used the private keys to simply look up his XMR transaction history on the blockchain. <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a> - July 2023
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "agents [got] a search warrant for Lichtenstein and Morgan’s home and cloud storage accounts, where they found files containing details of the cryptocurrency addresses used to move the stolen funds---including their private keys---along with the false information used to open accounts at cryptocurrency exchanges and plans to acquire fake passports. That discovery enabled investigators to trace the flow of funds in its entirety." <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a>
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: tx history lookup</p>
-            <p><span class="bold">Data leaked by the target</span>:</p>
-            <ul>
-                <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
-            </ul>
-            <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up his transaction history and then used the resulting information to charge him with theft.</p>
-        </div>
-        <hr>
-        <h2>7. The Ciphertrace tool</h2>
-        <p>
-            Mastercard offers a monero tracing tool created by Ciphertrace. It is part of their Crypto Source product. <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source 1</a>, <a href="https://www.mastercard.com/news/press/2022/october/mastercard-to-bring-crypto-trading-capabilities-to-banks/" target="_blank">source 2</a> - August 2021
-        </p>
-        <p>
-            <span class="bold">Key quote</span>: "Ciphertrace takes Monero tracing capabilities to the next level with the ability to follow the flow of funds backwards from the transaction of interest to its source." <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source</a> - see also <a href="https://www.youtube.com/watch?v=w5rtd3md11g" target="_blank">this video interview</a> with a Ciphertrace employee about their monero tracing tool
-        </p>
-        <p><button class="details_opener">Attack data</button></p>
-        <div class="details hidden">
-            <p><span class="bold">Attack type</span>: many -- see the above-linked video for further details</p>
-            <p><span class="bold">Data leaked by the target</span>: depends on the case -- the tool uses many techniques to trace monero and some of them are outlined in the above-linked video</p>
-            <p><span class="bold">Data used by the attacker</span>: depends on the case -- the tool uses many techniques to trace monero</p>
+        <div class="case_studies hidden">
+            <h1>Case studies</h1>
+            <hr>
+            <h2>1. The admin of Incognito Market</h2>
+            <p>
+                The Justice Department says they found the admin of Incognito Market by tracing his monero. <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - January 2024
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "cryptocurrency was first swapped through Swapping Service-1 and converted...to Monero... After the swap, the funds were transferred into [the perp’s] Crypto Account...[at the KYC exchange]..." <a href="https://www.justice.gov/archives/opa/media/1352571/dl" target="_blank">source</a> - page 25
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with timing analysis</p>
+                <p><span class="bold">Data leaked by the target</span>:</p>
+                <ul>
+                    <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                    <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                </ul>
+                <p><span class="bold">Data used by the attacker</span>: The attacker's report used the amounts received by the target, the time of the target's "send" transactions, and the amounts sent in each of those transactions. It did not use the info about the target's stealth public keys, their ring signatures, or their fee data. The report argued that the time and amounts in the analyzed transactions demonstrated that the target did the following procedure several times: the target swapped criminal proceeds into monero via a no-KYC exchange, withdrew them to a monero wallet, and then, within minutes, sent similar amounts -- sometimes identical amounts -- to a KYC exchange, where they sold the monero for fiat currency. The KYC exchange had the target's KYC info, which is how the authorities nabbed him.</p>
+            </div>
+            <hr>
+            <h2>2. A Columbian drug dealer</h2>
+            <p>
+                Chainalysis says they found a Columbian drug seller by tracing his monero. <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - September 2024
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "And so that was a really exciting moment for us because we were able to start using just this list of Morphtoken swaps occurring on the monero blockchain-–-very little information, and not many breadcrumbs to follow. We were able to trace that forward on the monero blockchain to an rpc ip observation and then leverage other chainalysis tools in order to find more potential results that we can return to law enforcement." <a href="https://v.nostr.build/D4Nzp22vRF35IRnz.mp4" target="_blank">source</a> - 38:37
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with poisoned outputs and RPC connections</p>
+                <p><span class="bold">Data leaked by the target</span>:</p>
+                <ul>
+                    <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                    <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, the target's wallet leaked that it was a "light" wallet by using RPC connections to various monero nodes to broadcast its transactions</li>
+                    <li>In one transaction, the target's wallet leaked the user's ip address while connecting to a monero node via an RPC connection</li>
+                </ul>
+                <p><span class="bold">Data used by the attacker</span>: The attacker's report used all of the above-listed leaks except for the fee data. (Although they did not use the fee data, they mentioned that it is sometimes useful for fingerprinting wallets, e.g. they mentioned that widely-used services like exchanges, darknet markets, and custodial wallets tend to set larger fees than do users of self-custodial wallets.) The target's use of a RPC connections was particularly meaningful because the target eventually revealed their ip address when their wallet connected to one of the attacker's nodes to broadcast a transaction, and the attacker was then able to use that ip address to find the target's real identity. To ensure that this transaction was created by the target, however, they had to do the following analysis: in several transactions, the attacker successfully used off-chain data about the "decoy" public keys in the ring signatures to eliminate some decoys, and at least once they identified the target as the true spend. They used these transaction analysis techniques several times, looking for transactions where the target connected to one of the attacker's nodes to broadcast a transaction via an RPC connection. The attacker found several transactions that did this, most of which could not be used to identify the recipient because he used a VPN to guard his ip address. But in one of them, he did not use a vpn, so they found his ip address and nabbed him. The only thing the attackers used timing analysis for, in this case, was to identify which transactions were sent before and after the Dandelion upgrade in monero, which makes it harder to identify the ip addresses of monero senders who use their own nodes.</p>
+            </div>
+            <hr>
+            <h2>3. A Finnish ransomware operator</h2>
+            <p>
+                Finnish authorities say they traced a ransomware operator’s monero from a swap service to a monero wallet to binance. The description of the case makes it sound like they used poisoned outputs, but there is evidence that the perpetrator leaked his monero private keys shortly before his arrest, which would have enabled a simpler attack: simply look up his transaction history on the blockchain. <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - January 2024
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "[He began] swapping for Monero and then transferring the funds to a dedicated Monero wallet. [Then] the funds were later sent to Binance." <a href="https://cointelegraph.com/news/finnish-authorities-traced-monero-vastaamo-hack" target="_blank">source</a> - more details <a href="https://www.reddit.com/r/Monero/comments/19emsfe/finlands_national_bureau_of_investigation_claims/" target="_blank">here</a>
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: either an Eve-Alice-Eve attack with poisoned outputs or a tx history lookup</p>
+                <p><span class="bold">Data leaked by the target</span>:</p>
+                <ul>
+                    <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+                    <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                    <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                    <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                </ul>
+                <p><span class="bold">Data used by the attacker</span>: It depends on which attack the attacker used, which is not clear from the report. Since the target leaked their private keys, the easiest attack would be to look up their transaction history. However, their description of the attack sounds like a case of poisoned outputs. If that is what it was, then the attacker likely used the same data in the Incognito Market report but without the timing info, which they probably substituted with stealth address data as in the Chainalysis report.</p>
+            </div>
+            <hr>
+            <h2>4. 18 Japanese perpetrators of computer fraud</h2>
+            <p>
+                Japanese authorities say they analyzed monero wallets found on the computers of 18 criminals who they arrested on other grounds. They then used the data they found in those wallets to charge them with money laundering. <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - October 2024
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "Japanese authorities said they analyzed about 900 of the group’s Monero-based money-laundering transactions...[and] told local media outlet Nikkei that this marked the first time the country’s law enforcement agencies had used Monero transactions to identify criminals." <a href="https://cointelegraph.com/news/monero-transactions-japanese-authorities-arrest-18-scammers" target="_blank">source</a> - more details <a href="https://web.archive.org/web/20241022125846/https://www.nikkei.com/article/DGXZQOUE211MN0R21C24A0000000/" target="_blank">here</a>
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: tx history lookup</p>
+                <p><span class="bold">Data leaked by the target</span>:</p>
+                <ul>
+                    <li>The targets leaked their private keys and with them their tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+                </ul>
+                <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up their transaction history and then used the resulting information to charge them with money laundering.</p>
+            </div>
+            <hr>
+            <h2>5. The operators of Archetyp</h2>
+            <p>
+                Interpol shut down monero-only darknet market Archetyp and says they found its operators by "tracing [their] financial flows". It is not *certain* that this means they traced their monero, but it was a monero-only exchange, so monero is the only type of finances I know they had available to trace. <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a> - June 2025
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "The takedown follows years of intensive investigative work to map the platform’s technical architecture and identify the individuals behind it. By tracing financial flows, analysing digital forensic evidence, and working closely with partners on the ground, authorities were able to deliver a decisive blow to one of the most prolific drug markets on the dark web." <a href="https://www.europol.europa.eu/media-press/newsroom/news/europe-wide-takedown-hits-longest-standing-dark-web-drug-market" target="_blank">source</a>
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: insufficient data -- the reports only say the attacker traced the target's financial flows without specifying how they did so</p>
+                <p><span class="bold">Data leaked by the target and used by the attacker</span>: insufficient data for the above-mentioned reasons</p>
+            </div>
+            <hr>
+            <h2>6. The Bitfinex hacker</h2>
+            <p>
+                Chainalysis reports that after the Bitfinex hacker was arrested, the police found monero wallets on his computer with their private keys, and they then used the private keys to simply look up his XMR transaction history on the blockchain. <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a> - July 2023
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "agents [got] a search warrant for Lichtenstein and Morgan’s home and cloud storage accounts, where they found files containing details of the cryptocurrency addresses used to move the stolen funds---including their private keys---along with the false information used to open accounts at cryptocurrency exchanges and plans to acquire fake passports. That discovery enabled investigators to trace the flow of funds in its entirety." <a href="https://www.chainalysis.com/blog/bitfinex-hack-plea-july-2023/" target="_blank">source</a>
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: tx history lookup</p>
+                <p><span class="bold">Data leaked by the target</span>:</p>
+                <ul>
+                    <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+                </ul>
+                <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up his transaction history and then used the resulting information to charge him with theft.</p>
+            </div>
+            <hr>
+            <h2>7. The Ciphertrace tool</h2>
+            <p>
+                Mastercard offers a monero tracing tool created by Ciphertrace. It is part of their Crypto Source product. <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source 1</a>, <a href="https://www.mastercard.com/news/press/2022/october/mastercard-to-bring-crypto-trading-capabilities-to-banks/" target="_blank">source 2</a> - August 2021
+            </p>
+            <p>
+                <span class="bold">Key quote</span>: "Ciphertrace takes Monero tracing capabilities to the next level with the ability to follow the flow of funds backwards from the transaction of interest to its source." <a href="https://news.bitcoin.com/ciphertrace-enhanced-monero-tracing-capabilities-governments/" target="_blank">source</a> - see also <a href="https://www.youtube.com/watch?v=w5rtd3md11g" target="_blank">this video interview</a> with a Ciphertrace employee about their monero tracing tool
+            </p>
+            <p><button class="details_opener">Attack data</button></p>
+            <div class="details hidden">
+                <p><span class="bold">Attack type</span>: many -- see the above-linked video for further details</p>
+                <p><span class="bold">Data leaked by the target</span>: depends on the case -- the tool uses many techniques to trace monero and some of them are outlined in the above-linked video</p>
+                <p><span class="bold">Data used by the attacker</span>: depends on the case -- the tool uses many techniques to trace monero</p>
+            </div>
         </div>
         <script>
+            var showPage = page => {
+                $( '.list_of_leaks' ).classList.add( "hidden" );
+                $( '.case_studies' ).classList.add( "hidden" );
+                $( `.${page}` ).classList.remove( "hidden" );
+            }
+            $( '.list_of_leaks_btn' ).onclick = () => {
+                showPage( 'list_of_leaks' );
+            }
+            $( '.case_studies_btn' ).onclick = () => {
+                showPage( 'case_studies' );
+            }
             $$( '.details_opener' ).forEach( item => onclick = e => {
                 var details_div = e.target.parentElement.nextElementSibling;
                 if ( !details_div || !details_div.classList.contains( "details" ) ) return;
                 if ( details_div.classList.contains( "hidden" ) ) details_div.classList.remove( "hidden" );
                 else details_div.classList.add( "hidden" );
             });
+            showPage( 'list_of_leaks' );
         </script>
     </body>
 </html> 
