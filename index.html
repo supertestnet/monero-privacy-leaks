@@ -71,7 +71,16 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with timing analysis</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: the attacker (Eve) learned the amounts received by the target (Alice) in several transactions, the time of the target's "send" transactions, and the amounts sent in each of the target's "send" transactions. The attacker thus knew that the target swapped criminal proceeds into monero via the no-KYC exchange and withdrew them to a monero wallet. They also knew that, within minutes, similar amounts -- sometimes identical amounts -- showed up on the KYC exchange, and that this same procedure played out several times. They then said the only plausible explanation is that the same person converted criminal proceeds into monero on exchange A and then sold them minutes later on exchange B, which had the target's KYC info.</p>
+            <p><span class="bold">Data leaked by the target</span>:</p>
+            <ul>
+                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+            </ul>
+            <p><span class="bold">Data used by the attacker</span>: The attacker's report used the amounts received by the target, the time of the target's "send" transactions, and the amounts sent in each of those transactions. It did not use the info about the target's stealth public keys or their ring signatures. The report argued that the time and amounts in the analyzed transactions demonstrated that the target did the following procedure several times: the target swapped criminal proceeds into monero via a no-KYC exchange, withdrew them to a monero wallet, and then, within minutes, sent similar amounts -- sometimes identical amounts -- to a KYC exchange, where they sold the monero for fiat currency. The KYC exchange had the target's KYC info, which is how the authorities nabbed him.</p>
         </div>
         <hr>
         <h2>2. A Columbian drug dealer</h2>
@@ -84,7 +93,18 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: Eve-Alice-Eve attack with poisoned outputs and RPC connections</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: the attacker (Eve) learned the amounts received by the target (Alice) in several transactions, several of the target's stealth public keys which received those amounts, the amounts sent in each of the target's "send" transactions, the type of wallet used by the target (specifically, it was a "light" wallet that used RPC connections to broadcast transactions), and the ring signatures of each of the target's "send" transactions, which referenced the same stealth public keys which originally received the money. In several transactions, the attacker successfully used off-chain data about the "decoy" public keys in the ring signatures to eliminate some decoys, and at least once they identified the target as the true spend. They used these transaction analysis techniques several times, looking for transactions where the target connected to one of the attacker's nodes to broadcast a transaction via an RPC connection. The attacker found several transactions that did this, most of which could not be used to identify the recipient because he used a VPN to guard his ip address. But in one of them, he did not use a vpn, so they found his ip address and nabbed him.</p>
+            <p><span class="bold">Data leaked by the target</span>:</p>
+            <ul>
+                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, the target's wallet leaked that it was a "light" wallet by using RPC connections to various monero nodes to broadcast its transactions</li>
+                <li>In one transaction, the target's wallet leaked the user's ip address while connecting to a monero node via an RPC connection</li>
+            </ul>
+            <p><span class="bold">Data used by the attacker</span>: The attacker's report used all of the above-listed leaks except for the fee data. (Although they did not use the fee data, they mentioned that it is sometimes useful for fingerprinting wallets, e.g. they mentioned that widely-used services like exchanges, darknet markets, and custodial wallets tend to set larger fees than do users of self-custodial wallets.) The target's use of a RPC connections was particularly meaningful because the target eventually revealed their ip address when their wallet connected to one of the attacker's nodes to broadcast a transaction, and the attacker was then able to use that ip address to find the target's real identity. To ensure that this transaction was created by the target, however, they had to do the following analysis: in several transactions, the attacker successfully used off-chain data about the "decoy" public keys in the ring signatures to eliminate some decoys, and at least once they identified the target as the true spend. They used these transaction analysis techniques several times, looking for transactions where the target connected to one of the attacker's nodes to broadcast a transaction via an RPC connection. The attacker found several transactions that did this, most of which could not be used to identify the recipient because he used a VPN to guard his ip address. But in one of them, he did not use a vpn, so they found his ip address and nabbed him. The only thing the attackers used timing analysis for, in this case, was to identify which transactions were sent before and after the Dandelion upgrade in monero, which makes it harder to identify the ip addresses of monero senders who use their own nodes.</p>
         </div>
         <hr>
         <h2>3. A Finnish ransomware operator</h2>
@@ -97,7 +117,17 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: either an Eve-Alice-Eve attack with poisoned outputs or a tx history lookup</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: the target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history. However, it is not clear that the attacker used this "simple" attack. Based on their description of the attack, it sounds like a case of poisoned outputs. If that is what it was, then the attacker (Eve) learned the amounts received by the target (Alice) in several transactions, several of the target's stealth public keys which received those amounts, the amounts sent in each of the target's "send" transactions, and the ring signatures of each of the target's "send" transactions, which referenced the same stealth public keys which originally received the money. If they used a tx history lookup, then the data leaked was the tx history itself</p>
+            <p><span class="bold">Data leaked by the target</span>:</p>
+            <ul>
+                <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+                <li>In several transactions, monero leaked the amount received by the target (Alice) to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the target (Alice)'s stealth public keys which received money to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the time of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the ring signatures of each of the target (Alice)'s "send" transactions to the attacker (Eve), which referenced the same stealth public keys where the target originally received money</li>
+                <li>In several transactions, monero leaked the amounts sent in each of the target (Alice)'s "send" transactions to the attacker (Eve)</li>
+                <li>In several transactions, monero leaked the fee paid by the target (Alice) in their "send" transactions to the attacker (Eve)</li>
+            </ul>
+            <p><span class="bold">Data used by the attacker</span>: It depends on which attack the attacker used, which is not clear from the report. Since the target leaked their private keys, the easiest attack would be to look up their transaction history. However, their description of the attack sounds like a case of poisoned outputs. If that is what it was, then the attacker likely used the same data in the Incognito Market report but without the timing info, which they probably substituted with stealth address data as in the Chainalysis report.</p>
         </div>
         <hr>
         <h2>4. 18 Japanese perpetrators of computer fraud</h2>
@@ -110,7 +140,11 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: tx history lookup</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: the targets leaked their private keys and with them their tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</p>
+            <p><span class="bold">Data leaked by the target</span>:</p>
+            <ul>
+                <li>The targets leaked their private keys and with them their tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+            </ul>
+            <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up their transaction history and then used the resulting information to charge them with money laundering.</p>
         </div>
         <hr>
         <h2>5. The operators of Archetyp</h2>
@@ -136,7 +170,11 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: tx history lookup</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: the target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</p>
+            <p><span class="bold">Data leaked by the target</span>:</p>
+            <ul>
+                <li>The target leaked his private keys and with them his tx history, because monero provides a cryptographic link between a user's private keys and their transaction history</li>
+            </ul>
+            <p><span class="bold">Data used by the attacker</span>: the attacker simply used the target's private keys to look up his transaction history and then used the resulting information to charge him with theft.</p>
         </div>
         <hr>
         <h2>7. The Ciphertrace tool</h2>
@@ -149,12 +187,13 @@
         <p><button class="details_opener">Attack data</button></p>
         <div class="details hidden">
             <p><span class="bold">Attack type</span>: many -- see the above-linked video for further details</p>
-            <p><span class="bold">Data leaked by the target and used by the attacker</span>: depends on the case -- the tool uses many techniques to trace monero and some of them are outlined in the above-linked video</p>
+            <p><span class="bold">Data leaked by the target</span>: depends on the case -- the tool uses many techniques to trace monero and some of them are outlined in the above-linked video</p>
+            <p><span class="bold">Data used by the attacker</span>: depends on the case -- the tool uses many techniques to trace monero</p>
         </div>
         <script>
             $$( '.details_opener' ).forEach( item => onclick = e => {
                 var details_div = e.target.parentElement.nextElementSibling;
-                if ( !details_div || details_div.tagName === "HR" ) return;
+                if ( !details_div || !details_div.classList.contains( "details" ) ) return;
                 if ( details_div.classList.contains( "hidden" ) ) details_div.classList.remove( "hidden" );
                 else details_div.classList.add( "hidden" );
             });
