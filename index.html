@@ -155,7 +155,6 @@
             $$( '.details_opener' ).forEach( item => onclick = e => {
                 var details_div = e.target.parentElement.nextElementSibling;
                 if ( !details_div || details_div.tagName === "HR" ) return;
-                if 
                 if ( details_div.classList.contains( "hidden" ) ) details_div.classList.remove( "hidden" );
                 else details_div.classList.add( "hidden" );
             });
