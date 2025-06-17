@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script>
+            if ( window.location.protocol !== "https:" && window.location.protocol !== "file"  ) {
+                var url = "https://" + window.location.hostname + window.location.pathname;
+                window.location.href = url;
+            }
+        </script>
         <meta charset="UTF-8">
         <title>Monero leaks</title>
         <meta name="viewport" content="width=device-width, user-scalable=no">
