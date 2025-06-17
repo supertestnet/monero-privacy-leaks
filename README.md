@@ -1,2 +1,2 @@
-# monero-privacy-leaks
+# Monero privacy leaks
 Examples of privacy leaks used to trace monero
