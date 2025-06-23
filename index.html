@@ -79,6 +79,7 @@
                 <li>Every monero transaction leaks at least one of the sender's inputs -- these can sometimes be linked to the sender's real identity via the common input ownership heuristic</li>
                 <li>Every monero transaction leaks at least one of the sender's ring signatures, and each of those references 16 stealth public keys. 15 are "decoys" and one is the real stealth public key where the sender received the money he or she is now sending. This is bad for privacy because chain analysts have tools for eliminating decoys. For example, they can check if any of the stealth public keys in the ring signature belongs to themselves or one of their partners, and then rule it out as definitely not the true spender because they know they themselves didn't sign the transaction, and can ask their partners if they did. By ruling out many decoys as definitely not the true spender, they can sometimes even narrow it down to just one pubkey and thus know for sure which stealth public key in the ring signature belongs to the true spender</li>
             </ul>
+            <hr>
             <h2>Leaks involving amount privacy</h2>
             <ul>
                 <li>Every monero transaction leaks the fee paid by the sender. These fees are sometimes used for wallet fingerprinting. For example, commonly used services like exchanges, darknet markets, and custodial wallets tend to set higher fees than do users of self-custodial wallets</li>
