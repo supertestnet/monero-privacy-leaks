@@ -61,7 +61,7 @@
         <h1>Monero leaks</h1>
         <p>Examples of privacy leaks used to trace monero</p>
         <hr>
-        <p style="text-align: center;"><button class="menu_btns list_of_leaks_btn">List of leaks</button> <button class="menu_btns case_studies_btn">Case studies</button></p>
+        <p style="text-align: center;"><button class="menu_btns list_of_leaks_btn">List of leaks</button> <button class="menu_btns list_of_attacks_btn">List of attacks</button> <button class="menu_btns case_studies_btn">Case studies</button></p>
         <hr>
         <div class="list_of_leaks hidden">
             <h1>List of leaks</h1>
@@ -94,6 +94,134 @@
                 <li>Even wallets that *do* use dandelion still leak data; the dandelion protocol uses "stem nodes" to forward a transaction a number of hops before broadcasting it, but each "stem node" knows that the stem node before them has some probability of being the true sender. Moreover, dandelion does not encrypt these transactions, allowing stem nodes to compare them and learn more info. For example, suppose Alice forwards 5 transactions through Bob, and Bob observes that 3 of them have multiple inputs and multiple outputs. This indicates that those 3 were made by a service with several users; and if Bob observes that Alice's node is frequently offline, that suggests Alice's node did not create those transactions, because such services typically have high uptime</li>
                 <li>Many monero users reuse their monero address by e.g. providing it to multiple exchanges. But address reuse is bad for privacy because it allows multiple senders to easily "compare notes" and see if they sent money to the same person, and it allows the same sender to more easily log whether they sent money to the same person more than once</li>
                 <li>It is difficult to safely "rotate keys" in monero -- and delete your old private keys -- because monero wallets commonly support a "contact list" which works by directly storing the recipient's monero address for future reuse. So if you do delete your private keys, someone might send money to a monero address whose key you deleted. But rotating keys is wise because, in monero, your private keys are cryptographically linked to their whole transaction history, which can be looked up on the blockchain by anyone who acquires those keys. Rotating keys (and safely deleting the old ones) is thus wise but hard to do in monero, and that's a serious UX hurdle</li>
+            </ul>
+        </div>
+        <div class="list_of_attacks hidden">
+            <h1>List of attacks</h1>
+            <hr>
+            <p>
+                The following is a list of attacks used to trace monero. You can get further details about each attack, how it works, and where it's been used by clicking them.
+            </p>
+            <ul>
+                <li><a href="#eve_alice_eve_attack">Eve-Alice-Eve attack</a></li>
+                <li><a href="#poisoned_output_attack">Poisoned output attack</a></li>
+                <li><a href="#timing_analysis_attack">Timing analysis attack</a></li>
+                <li><a href="#decoy_elimination_attack">Decoy elimination attack</a></li>
+                <li><a href="#spy_node_attack">Spy node attack</a></li>
+                <li><a href="#tx_history_lookup_attack">Tx history lookup attack</a></li>
+            </ul>
+            <h2 id="eve_alice_eve_attack">Eve-Alice-Eve attack</h2>
+            <p>
+                In this attack, two parties collude to deanonymize two transactions of a central figure, Alice. The first party (Eve1) sends monero to Alice in transaction A; the second party (Eve2) receives monero from Alice in transaction B.
+            </p>
+            <p>
+                They are both called Eve because they are really the same party, in this sense: as part of the attack, they collude with one another and compare the transaction records in their wallets. If the public key Eve1 sent monero to in tx A appears in the ring signature of tx B, where Eve2 received monero, or if the amount in tx B matches the amount in tx A, or if the transaction times match (see Timing Analysis below), it is evidence that Alice received monero in tx A and sent monero in tx B.
+            </p>
+            <p>
+                Thus the attackers trace the monero across two transactions. The evidence established in an Eve-Alice-Eve attack becomes stronger if the attackers are able to use it repeatedly against the same target. If the target's pubkey keeps showing up in the ring signature of tx B, the likelihood of it being due to chance falls lower and lower.
+            </p>
+            <p>
+                The Eve-Alice-Eve attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>The admin of Incognito Market</li>
+                <li>A Columbian drug dealer</li>
+                <li>A Finnish blackmailer</li>
+            </ul>
+            <hr>
+            <h2 id="poisoned_output_attack">Poisoned output attack</h2>
+            <p>
+                This attack is a digital form of the "marked bills" attack commonly used to trace physical currency. It is typically part of an Eve-Alice-Eve attack, specifically the part where Eve1 sends monero to Alice. The monero is treated as equivalent to a marked bill, where the mark is sometimes a unique amount and sometimes just a record of which pubkey received the monero (sometimes both pieces of data are treated as marks).
+            </p>
+            <p>
+                As with physical currency, the goal is to get the "marked bills" (the poisoned outputs) to a target and then watch to see if the target sends it to a person or company -- a "colluder" -- who knows the identity of those who send them monero, and who has agreed to share data with the attacker to help identify the target.
+            </p>
+            <p>
+                If a marked output gets sent to the colluder (i.e. the transaction sends the marked amount or uses the marked pubkey in its ring signature), the attack has worked, and the colluder can tell the attacker the identity of the sender, against whom there is now evidence that they received the poisoned output. Repeated successful use of the poisoned output attack strengthens the case against the target.
+            </p>
+            <p>
+                The poisoned output attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>A Columbian drug dealer</li>
+                <li>A Finnish blackmailer</li>
+            </ul>
+            <hr>
+            <h2 id="timing_analysis_attack">Timing analysis attack</h2>
+            <p>
+                This attack is typically part of an Eve-Alice-Even attack. It can be used when the target tries to evade the poisoned output attack (see above), which is commonly done via two methods: churning (i.e. the target repeatedly sends the marked bills to new, fresh pubkeys to get it out of any potentially-marked pubkeys) and amount splitting (i.e. the target splits up the monero and sends chunks of it to different wallets so that no chunk matches the marked amount). If the target uses those techniques, they can still sometimes be traced by timing analysis, which is based on patterned behavior, or habits.
+            </p>
+            <p>
+                Suppose the attacker suspects he knows the identity of his target, but has no proof. The target can send monero to the target (Alice) as Eve1 -- this is tx A -- and observe how long it takes for Alice to make a new deposit -- tx B -- to Eve2 (e.g. an exchange or merchant who shares information about its customers with the attacker). Even if the target used churning and amount splitting so that the amount and pubkey in tx B no longer match the ones the attacker marked in tx A, the attacker can still mark the time between tx A and tx B, and then try the attack again: send monero to Alice as Eve1 and mark how long it takes for Alice to make a new deposit to Eve2. Then do it again, and again, and again.
+            </p>
+            <p>
+                If the marked "time" shows up repeatedly as roughly the same in each case, it is evidence that Alice is in some sort of habit of receiving monero, spending a certain amount of time churning it and/or splitting the amount, and then sending it to Eve2. Perhaps she set up a computer program to do this on a schedule, or she herself does it on a schedule, e.g. every Tuesday.
+            </p>
+            <p>
+                The timing analysis attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>The admin of Incognito Market</li>
+            </ul>
+            <hr>
+            <h2 id="decoy_elimination_attack">Decoy elimination attack</h2>
+            <p>
+                This attack is useful in any case where the attacker has a list of transaction ids where they suspect their target sent monero. They can get such a list by scanning the blockchain for transactions containing a stealth pubkey known to belong to the target, or from someone who interacted with the target several times, such as an exchange or a merchant.
+            </p>
+            <p>
+                With the list in hand, the attacker can use the transaction ids to get the relevant transactions from the blockchain, examine the ring signature(s) in each transaction, and check if any of the pubkeys in the ring signature belong to themselves or someone they know. If they find such pubkeys, they can ask the owner if they created that transaction. If not, they know it was a decoy pubkey, and not the true spender.
+            </p>
+            <p>
+                This technique allows the attacker to reduce the target's "anonymity set." In the worst case, they can eliminate all decoys and uniquely identify the target's pubkey as the true sender of that transaction, which allows the attacker to then trace the attack backward or possibly forward to another transaction, where they may be able to use the same technique again, or another one, to continue the trace.
+            </p>
+            <p>
+                The decoy elimination attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>A Columbian drug dealer</li>
+            </ul>
+            <hr>
+            <h2 id="spy_node_attack">Spy node attack</h2>
+            <p>
+                This attack relies on the way monero wallets broadcast transactions to the network. Monero "light wallets" pick a node on the monero network and broadcast transactions through it using an RPC command, i.e. a software API. Some wallets pick "spy nodes" which are run by blockchain analytics companies or other attackers, who run them with the direct purpose of gather transaction data, analyzing it, and identifying user information.
+            </p>
+            <p>
+                As a result, a user of a wallet that sends some or all transactions through these spy nodes has some probability of leaking his or her IP address to those attackers in a way that links it to a particular transaction. If an attacker gets your IP address, they can often use it to identify what city you are in, and then contact internet service providers in that city to ask them if the IP address was assigned to any of their customers. If so, they can often get the target's billing information from that internet service provider, and thus link a monero transaction directly to a user's real identity.
+            </p>
+            <p>
+                It is worth noting that this attack only applies to "light" monero wallets. Monero nodes do a better job of protecting the IP addresses of their users, though the technique they use is not foolproof either. Monero nodes use a protocol called Dandelion++ to protect the IP addresses of their users, and in that protocol, transactions are sent through a series of "stem nodes" before one of them finally broadcasts the transaction to the whole network.
+            </p>
+            <p>
+                The goal of this "stem phase" is to avoid leaking the sender's IP address to the attacker, who is assumed to run a spy node. When Dandelion++ is used instead of an RPC command, a monero node that receives a transaction does not know if the node they received it from is the sender or just another stem node.
+            </p>
+            <p>
+                However, the Dandelion++ protocol has weaknesses, including that is based on probability: a node has a certain percentage chance it will act as a stem node and forward the transaction to just one peer. The rest of the time, it acts as a "fluff node" and broadcasts the transaction to all of its peers.
+            </p>
+            <p>
+                An attacker can exploit this: when he receives a transaction from a peer, he can query other nodes for the transaction id to "find out" if the previous node was in the stem phase or the fluff phase. If, after a delay, no one has the transaction, the attacker knows the transaction is likely still in its "stem phase." That information allows for further analysis: if we are still in the stem phase, then the prior node was definitely not a fluff node. It was either a stem node or the sender, which is data the attacker should not have.
+            </p>
+            <p>
+                This attack gets better if the transaction passes through *multiple* nodes owned by the attacker or its data-sharing partners during its stem phase. The attacker knows the probability that any node is a stem node; and it knows which peers it received transactions from; so it knows the path of stem nodes is unlikely to go beyond N nodes. The more nodes it controls on the path, the more likely it is that the first node it received the transaction from is the true spender, thus leaking their IP address, and possibly linking their real identity to their monero transaction.
+            </p>
+            <p>
+                The spy node attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>A Columbian drug dealer</li>
+            </ul>
+            <hr>
+            <h2 id="tx_history_lookup_attack">Tx history lookup attack</h2>
+            <p>
+                This attack comes into play if a target leaks his monero private key to an attacker, e.g. because the attacker seizes a computer holding that private key in some sort of raid. In monero, your private keys are cryptographically linked to your whole transaction history, so if someone accesses your keys, they can look up your transaction history on the blockchain, and identify transactions where anyone sent you money.
+            </p>
+            <p>
+                The tx history lookup attack was used to arrest or convict monero users in the following criminal cases, which you can read about in <a href="#case_studies" class="case_studies_link">the Case Studies section</a> of this website:
+            </p>
+            <ul>
+                <li>A Finnish blackmailer</li>
+                <li>18 Japanese perpetrators of computer fraud</li>
+                <li>The operators of Archetyp</li>
+                <li>The Bitfinex hacker</li>
             </ul>
         </div>
         <div class="case_studies hidden">
@@ -232,15 +360,23 @@
         <script>
             var showPage = page => {
                 $( '.list_of_leaks' ).classList.add( "hidden" );
+                $( '.list_of_attacks' ).classList.add( "hidden" );
                 $( '.case_studies' ).classList.add( "hidden" );
                 $( `.${page}` ).classList.remove( "hidden" );
             }
             $( '.list_of_leaks_btn' ).onclick = () => {
                 showPage( 'list_of_leaks' );
             }
+            $( '.list_of_attacks_btn' ).onclick = () => {
+                showPage( 'list_of_attacks' );
+            }
             $( '.case_studies_btn' ).onclick = () => {
                 showPage( 'case_studies' );
             }
+            $$( '.case_studies_link' ).forEach( item => item.onclick = () => {
+                showPage( 'case_studies' );
+                window.scrollTo( 0, 0 );
+            });
             $$( '.details_opener' ).forEach( item => onclick = e => {
                 var details_div = e.target.parentElement.nextElementSibling;
                 if ( !details_div || !details_div.classList.contains( "details" ) ) return;
@@ -250,4 +386,4 @@
             showPage( 'list_of_leaks' );
         </script>
     </body>
-</html> 
+</html>  
